@@ -1,0 +1,13 @@
+{
+  "$schema": "https://www.partykit.io/schema.json",
+  "name": "yjs-cds-party",
+  "main": "party/index.ts",
+  "compatibilityDate": "2025-04-04",
+  "serve": {
+    "path": "dist"
+  },
+  "build": {
+    "command": "npm run build",
+    "watch": "src"
+  }
+}
