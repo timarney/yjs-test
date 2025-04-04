@@ -1,5 +1,5 @@
 import { useSyncedStore } from "@syncedstore/react";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { globalStore, HOST } from "./store";
 import { getYjsValue } from "@syncedstore/core";
 
@@ -7,19 +7,38 @@ import { WebsocketProvider } from "y-partykit/provider";
 
 import "./index.css";
 
-
+const provider = new WebsocketProvider(
+  HOST,
+  "gc-forms-1",
+  getYjsValue(globalStore) as any
+); // sync via partykit
 
 function App() {
   const store = useSyncedStore(globalStore);
-  const [view, setView] = useState<"all" | "active" | "completed">("all");
 
-  const provider = new WebsocketProvider(
-    HOST,
-    "gc-forms-1",
-    getYjsValue(globalStore) as any
-  ); // sync via partykit
+  const [activeCount, setActiveCount] = useState(0);
 
-  const awareness = provider.awareness;
+  const yjsProvider = provider as WebsocketProvider;
+
+  // const name = yjsProvider.awareness.getLocalState()?.user?.name;
+
+  const handleAwarenessUpdate = useCallback(() => {
+    const awareness = yjsProvider.awareness;
+    const clients = awareness.getStates();
+    const clientsArray = Array.from(clients.values());
+    console.log(clientsArray);
+    setActiveCount(clientsArray.length);
+  }, [yjsProvider]);
+
+  useEffect(() => {
+    if (yjsProvider == null) {
+      return;
+    }
+
+    yjsProvider.awareness.on("update", handleAwarenessUpdate);
+
+    return () => yjsProvider.awareness.off("update", handleAwarenessUpdate);
+  }, [yjsProvider, handleAwarenessUpdate]);
 
   function onKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Enter") {
@@ -29,11 +48,24 @@ function App() {
     }
   }
 
+  const removeTodo = (index: number) => {
+    store.todos.splice(index, 1);
+  };
+
   return (
     <div className="todoRoot">
       <section className="todoapp">
         <header className="header">
-          <h1>todos</h1>
+          <h1>Yjs Test</h1>
+
+          {activeCount && (
+            <div className="active-clients mr-10">
+              <span className="active-clients-count">
+                {activeCount} active clients
+              </span>
+            </div>
+          )}
+
           <input
             className="new-todo"
             placeholder="What needs to be done?"
@@ -46,14 +78,21 @@ function App() {
             <section className="main">
               <ul className="todo-list">
                 {store.todos.map((todo, index) => (
-                  <li key={index}>{todo.title}</li>
+                  <li key={index}>
+                    <button
+                      onClick={() => {
+                        removeTodo(index);
+                      }}
+                    >
+                      {todo.title}
+                    </button>
+                  </li>
                 ))}
               </ul>
             </section>
           </>
         )}
       </section>
-      <footer className="info">-</footer>
     </div>
   );
 }

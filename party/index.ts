@@ -18,7 +18,7 @@ export default class YjsServer implements Party.Server {
           // or some external storage
         },
         // control how often handler is called with these options
-        debounceWait: 10000, // default: 2000 ms
+        debounceWait: 2000, // default: 2000 ms
         debounceMaxWait: 20000, // default: 10000 ms
         timeout: 5000 // default: 5000 ms
       }
