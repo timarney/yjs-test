@@ -53,46 +53,50 @@ function App() {
   };
 
   return (
-    <div className="todoRoot">
-      <section className="todoapp">
-        <header className="header">
-          <h1>Yjs Test</h1>
-
+    <div className="flex flex-col min-h-screen">
+      <header className="bg-gray-100 p-4 shadow">
+        <h1 className="text-lg font-bold">Yjs Test</h1>
+      </header>
+      <main className="flex-1 p-4">
+        <section className="mb-4">
           {activeCount && (
-            <div className="active-clients mr-10">
-              <span className="active-clients-count">
+            <div className="active-clients mb-2">
+              <span className="active-clients-count text-sm">
                 {activeCount} active clients
               </span>
             </div>
           )}
-
-          <input
-            className="new-todo"
-            placeholder="What needs to be done?"
-            autoFocus
-            onKeyPress={onKeyPress}
-          />
-        </header>
-        {!!store.todos.length && (
-          <>
-            <section className="main">
-              <ul className="todo-list">
+          <div className="">
+            <div>
+              <input
+                className="new-todo border rounded p-2 w-full mb-10"
+                placeholder="Add a message"
+                autoFocus
+                onKeyPress={onKeyPress}
+              />
+              <ul className="space-y-2">
                 {store.todos.map((todo, index) => (
-                  <li key={index}>
+                  <li
+                    key={index}
+                    className="flex items-center justify-between border-b border-b-gray-400 pb-2 max-w-md"
+                  >
+                    <span>{todo.title}</span>
                     <button
-                      onClick={() => {
-                        removeTodo(index);
-                      }}
+                      className="text-red-500 hover:text-red-700 font-bold"
+                      onClick={() => removeTodo(index)}
                     >
-                      {todo.title}
+                      ✕
                     </button>
                   </li>
                 ))}
               </ul>
-            </section>
-          </>
-        )}
-      </section>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer className="bg-gray-100 p-4 text-center">
+        <p className="text-sm">Footer content here</p>
+      </footer>
     </div>
   );
 }
