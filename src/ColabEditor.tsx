@@ -23,7 +23,7 @@ const editorConfig = {
   // would indicate that the editor should not try to set any default state
   // (not even empty one), and let collaboration plugin do it instead
   editorState: null,
-  namespace: "documentID-m-28-gcforms-app",
+  namespace: "gc-forms-2",
   nodes: [],
   // Handling of errors during update
   onError(error: Error) {

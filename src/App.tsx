@@ -6,7 +6,8 @@ import { getYjsValue } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 
 import "./index.css";
-import { ColabEditor } from "./ColabEditor";
+
+import { Editor } from "./blocknote/Editor";
 
 const provider = new WebsocketProvider(
   HOST,
@@ -93,15 +94,8 @@ function App() {
             </div>
           </div>
 
-          <div className="mt-10 border-2 flex-1 border-gray-300 rounded-lg p-4">
-            <ColabEditor
-              profile={{
-                id: "1",
-                name: "User 1",
-                color: "#ff0000",
-              }}
-              id="gc-forms-1"
-            />
+          <div className="mt-10">
+            <Editor />
           </div>
         </section>
       </main>
