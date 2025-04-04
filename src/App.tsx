@@ -6,6 +6,7 @@ import { getYjsValue } from "@syncedstore/core";
 import { WebsocketProvider } from "y-partykit/provider";
 
 import "./index.css";
+import { ColabEditor } from "./ColabEditor";
 
 const provider = new WebsocketProvider(
   HOST,
@@ -26,7 +27,6 @@ function App() {
     const awareness = yjsProvider.awareness;
     const clients = awareness.getStates();
     const clientsArray = Array.from(clients.values());
-    console.log(clientsArray);
     setActiveCount(clientsArray.length);
   }, [yjsProvider]);
 
@@ -91,6 +91,17 @@ function App() {
                 ))}
               </ul>
             </div>
+          </div>
+
+          <div className="mt-10 border-2 flex-1 border-gray-300 rounded-lg p-4">
+            <ColabEditor
+              profile={{
+                id: "1",
+                name: "User 1",
+                color: "#ff0000",
+              }}
+              id="gc-forms-1"
+            />
           </div>
         </section>
       </main>
