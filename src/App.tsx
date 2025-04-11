@@ -1,6 +1,13 @@
 import { useSyncedStore } from "@syncedstore/react";
+
+// Extend the Window interface to include documentStore
+declare global {
+  interface Window {
+    documentStore: any;
+  }
+}
 import React, { useCallback, useEffect, useState } from "react";
-import { globalStore, HOST } from "./store";
+import { globalStore } from "./store";
 import { getYjsValue } from "@syncedstore/core";
 
 import { WebsocketProvider } from "y-partykit/provider";
@@ -10,18 +17,23 @@ import "./index.css";
 import { getRandomUser } from "./blocknote/randomUser";
 import { Editor } from "./blocknote/Editor";
 
-const provider = new WebsocketProvider(
-  HOST,
-  "gc-forms-1",
-  getYjsValue(globalStore) as any
-); // sync via partykit
+const doc = getYjsValue(globalStore) as any;
+
+import YPartyKitProvider from "y-partykit/provider";
+
+const PARTYKIT_HOST =
+  (import.meta as any).env?.VITE_PARTYKIT_HOST || "localhost:3000";
+
+const provider = new YPartyKitProvider(PARTYKIT_HOST, "my-document-id", doc);
+
+window.documentStore = doc; // expose the document store to the window object
 
 const user = getRandomUser();
 
 function App() {
   const store = useSyncedStore(globalStore);
 
-  const [activeNote, setActiveNote] = useState("document-store");
+  const [activeNote, setActiveNote] = useState<typeof doc>("doc1");
   const [loading, setLoading] = useState(false);
 
   const [activeCount, setActiveCount] = useState(0);
@@ -87,16 +99,22 @@ function App() {
                 }, 500);
               }}
             >
-              <option value="document-store">Note 1</option>
-              <option value="document-store-1">Note 2</option>
-              <option value="document-store-2">Note 3</option>
+              <option value="doc1">Note 1</option>
+              <option value="doc2">Note 2</option>
+              <option value="doc3">Note 3</option>
             </select>
             {loading && (
               <div className="text-center mt-4">
                 <span className="loader">loading....</span>
               </div>
             )}
-            {!loading && <Editor fragment={activeNote} user={user} />}
+            {!loading && (
+              <Editor
+                fragment={doc.getXmlFragment(activeNote)}
+                provider={provider}
+                user={user}
+              />
+            )}
           </div>
 
           <div className="mb-10">
@@ -126,6 +144,9 @@ function App() {
             </div>
           </div>
         </section>
+        <pre className="max-w-[300px] wrap-break-word"
+        >{JSON.stringify(store, undefined, 4)}
+        </pre>
       </main>
       <footer className="bg-gray-100 p-4 text-center">
         <p className="text-sm">Footer content here</p>
