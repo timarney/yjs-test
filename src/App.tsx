@@ -7,6 +7,7 @@ import { WebsocketProvider } from "y-partykit/provider";
 
 import "./index.css";
 
+import { getRandomUser } from "./blocknote/randomUser";
 import { Editor } from "./blocknote/Editor";
 
 const provider = new WebsocketProvider(
@@ -15,8 +16,13 @@ const provider = new WebsocketProvider(
   getYjsValue(globalStore) as any
 ); // sync via partykit
 
+const user = getRandomUser();
+
 function App() {
   const store = useSyncedStore(globalStore);
+
+  const [activeNote, setActiveNote] = useState("document-store");
+  const [loading, setLoading] = useState(false);
 
   const [activeCount, setActiveCount] = useState(0);
 
@@ -95,7 +101,27 @@ function App() {
           </div>
 
           <div className="mt-10">
-            <Editor />
+            <select
+              className="mb-10"
+              value={activeNote}
+              onChange={(e) => {
+                setLoading(true);
+                setActiveNote(e.target.value);
+                setTimeout(() => {
+                  setLoading(false);
+                }, 500);
+              }}
+            >
+              <option value="document-store">Note 1</option>
+              <option value="document-store-1">Note 2</option>
+              <option value="document-store-2">Note 3</option>
+            </select>
+            {loading && (
+              <div className="text-center mt-4">
+                <span className="loader">loading....</span>
+              </div>
+            )}
+            {!loading && <Editor fragment={activeNote} user={user} />}
           </div>
         </section>
       </main>

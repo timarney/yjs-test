@@ -27,6 +27,11 @@ const names = [
   "Ctrl Zedson"
 ];
 
+export interface User {
+  name: string;
+  color: string;
+}
+
 const getRandomElement = <T>(list: T[]) =>
   list[Math.floor(Math.random() * list.length)];
 

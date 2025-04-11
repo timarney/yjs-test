@@ -6,23 +6,29 @@ import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 import * as Y from "yjs";
 
-import { getRandomUser } from "./randomUser";
+import { User } from "./randomUser";
 
-
-const PARTYKIT_HOST = import.meta.env.VITE_PARTYKIT_HOST || "localhost:3000";
+const PARTYKIT_HOST =
+  (import.meta as any).env?.VITE_PARTYKIT_HOST || "localhost:3000";
 
 const doc = new Y.Doc();
 const provider = new YPartyKitProvider(PARTYKIT_HOST, "my-document-id", doc);
 
-export const Editor = () => {
+export const Editor = ({
+  fragment,
+  user,
+}: {
+  fragment: string;
+  user: User;
+}) => {
   const editor = useCreateBlockNote({
     collaboration: {
       // The Yjs Provider responsible for transporting updates:
       provider,
       // Where to store BlockNote data in the Y.Doc:
-      fragment: doc.getXmlFragment("document-store"),
+      fragment: doc.getXmlFragment(fragment),
       // Information (name and color) for this user:
-      user: getRandomUser(),
+      user,
     },
   });
   return <BlockNoteView editor={editor} />;
