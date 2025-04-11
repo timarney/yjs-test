@@ -1,16 +1,13 @@
+import * as Y from "yjs";
 import * as React from "react";
 import YPartyKitProvider from "y-partykit/provider";
+
 import "@blocknote/core/fonts/inter.css";
 import { useCreateBlockNote } from "@blocknote/react";
 import { BlockNoteView } from "@blocknote/mantine";
 import "@blocknote/mantine/style.css";
 
-import * as Y from "yjs";
-
-
 import { User } from "./randomUser";
-
-
 
 export const Editor = ({
   fragment,

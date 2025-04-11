@@ -1,4 +1,7 @@
+import React, { useCallback, useEffect, useState } from "react";
+import YPartyKitProvider, {WebsocketProvider} from "y-partykit/provider";
 import { useSyncedStore } from "@syncedstore/react";
+import { getYjsValue } from "@syncedstore/core";
 
 // Extend the Window interface to include documentStore
 declare global {
@@ -6,20 +9,14 @@ declare global {
     documentStore: any;
   }
 }
-import React, { useCallback, useEffect, useState } from "react";
+
 import { globalStore } from "./store";
-import { getYjsValue } from "@syncedstore/core";
-
-import { WebsocketProvider } from "y-partykit/provider";
-
 import "./index.css";
 
 import { getRandomUser } from "./blocknote/randomUser";
 import { Editor } from "./blocknote/Editor";
 
 const doc = getYjsValue(globalStore) as any;
-
-import YPartyKitProvider from "y-partykit/provider";
 
 const PARTYKIT_HOST =
   (import.meta as any).env?.VITE_PARTYKIT_HOST || "localhost:3000";
