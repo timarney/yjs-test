@@ -66,14 +66,40 @@ function App() {
       </header>
       <main className="flex-1 p-4">
         <section className="mb-4">
-          {activeCount && (
+          {activeCount && activeCount >= 1 && (
             <div className="active-clients mb-2">
               <span className="active-clients-count text-sm">
                 {activeCount} active clients
               </span>
             </div>
           )}
-          <div className="">
+
+          <div className="mb-10">
+            <label className="mr-4"> Select a note to edit:</label>
+            <select
+              className="mb-2 bg-gray-100 p-2 border rounded"
+              value={activeNote}
+              onChange={(e) => {
+                setLoading(true);
+                setActiveNote(e.target.value);
+                setTimeout(() => {
+                  setLoading(false);
+                }, 500);
+              }}
+            >
+              <option value="document-store">Note 1</option>
+              <option value="document-store-1">Note 2</option>
+              <option value="document-store-2">Note 3</option>
+            </select>
+            {loading && (
+              <div className="text-center mt-4">
+                <span className="loader">loading....</span>
+              </div>
+            )}
+            {!loading && <Editor fragment={activeNote} user={user} />}
+          </div>
+
+          <div className="mb-10">
             <div>
               <input
                 className="new-todo border rounded p-2 w-full mb-10"
@@ -98,30 +124,6 @@ function App() {
                 ))}
               </ul>
             </div>
-          </div>
-
-          <div className="mt-10">
-            <select
-              className="mb-10"
-              value={activeNote}
-              onChange={(e) => {
-                setLoading(true);
-                setActiveNote(e.target.value);
-                setTimeout(() => {
-                  setLoading(false);
-                }, 500);
-              }}
-            >
-              <option value="document-store">Note 1</option>
-              <option value="document-store-1">Note 2</option>
-              <option value="document-store-2">Note 3</option>
-            </select>
-            {loading && (
-              <div className="text-center mt-4">
-                <span className="loader">loading....</span>
-              </div>
-            )}
-            {!loading && <Editor fragment={activeNote} user={user} />}
           </div>
         </section>
       </main>
