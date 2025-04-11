@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import YPartyKitProvider, {WebsocketProvider} from "y-partykit/provider";
+import YPartyKitProvider, { WebsocketProvider } from "y-partykit/provider";
 import { useSyncedStore } from "@syncedstore/react";
 import { getYjsValue } from "@syncedstore/core";
 
@@ -84,34 +84,57 @@ function App() {
           )}
 
           <div className="mb-10">
-            <label className="mr-4"> Select a note to edit:</label>
-            <select
-              className="mb-2 bg-gray-100 p-2 border rounded"
-              value={activeNote}
-              onChange={(e) => {
-                setLoading(true);
-                setActiveNote(e.target.value);
-                setTimeout(() => {
-                  setLoading(false);
-                }, 500);
+            <div
+              className="mb-10"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setActiveNote("doc1");
               }}
             >
-              <option value="doc1">Note 1</option>
-              <option value="doc2">Note 2</option>
-              <option value="doc3">Note 3</option>
-            </select>
-            {loading && (
-              <div className="text-center mt-4">
-                <span className="loader">loading....</span>
-              </div>
-            )}
-            {!loading && (
               <Editor
-                fragment={doc.getXmlFragment(activeNote)}
+                mode={activeNote === "doc1" ? "edit" : "view"}
+                fragment={doc.getXmlFragment("doc1")}
                 provider={provider}
                 user={user}
               />
-            )}
+            </div>
+
+            <hr></hr>
+
+            <div
+              className="mb-10"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setActiveNote("doc2");
+              }}
+            >
+              <Editor
+                mode={activeNote === "doc2" ? "edit" : "view"}
+                fragment={doc.getXmlFragment("doc2")}
+                provider={provider}
+                user={user}
+              />
+            </div>
+
+            <hr></hr>
+
+            <div
+              className="mb-10"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                setActiveNote("doc3");
+              }}
+            >
+              <Editor
+                mode={activeNote === "doc3" ? "edit" : "view"}
+                fragment={doc.getXmlFragment("doc3")}
+                provider={provider}
+                user={user}
+              />
+            </div>
           </div>
 
           <div className="mb-10">
@@ -141,9 +164,6 @@ function App() {
             </div>
           </div>
         </section>
-        <pre className="max-w-[300px] wrap-break-word"
-        >{JSON.stringify(store, undefined, 4)}
-        </pre>
       </main>
       <footer className="bg-gray-100 p-4 text-center">
         <p className="text-sm">Footer content here</p>

@@ -11,10 +11,12 @@ import { User } from "./randomUser";
 
 export const Editor = ({
   fragment,
+  mode,
   user,
   provider,
 }: {
   fragment: Y.XmlFragment;
+  mode: "edit" | "view";
   provider: YPartyKitProvider;
   user: User;
 }) => {
@@ -28,5 +30,11 @@ export const Editor = ({
       user,
     },
   });
-  return <BlockNoteView editor={editor} />;
+  return (
+    <BlockNoteView
+      autoFocus={mode === "edit" ? true : false}
+      editable={mode === "edit" ? true : false}
+      editor={editor}
+    />
+  );
 };
