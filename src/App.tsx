@@ -68,6 +68,29 @@ function App() {
     store.todos.splice(index, 1);
   };
 
+  const handleClick = (e) => {
+    console.log("clicked", e);
+    setActiveNote(e.currentTarget.id);
+  };
+
+  const editors = [
+    { id: "doc1", title: "Document 1" },
+    { id: "doc2", title: "Document 2" },
+    { id: "doc3", title: "Document 3" },
+  ];
+  const editorComponents = editors.map((editor) => (
+    <div className="mb-10" key={editor.id}>
+      <Editor
+        id={editor.id}
+        onClick={handleClick}
+        mode={activeNote === editor.id ? "edit" : "view"}
+        fragment={doc.getXmlFragment(editor.id)}
+        provider={provider}
+        user={user}
+      />
+    </div>
+  ));
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="bg-gray-100 p-4 shadow">
@@ -83,59 +106,7 @@ function App() {
             </div>
           )}
 
-          <div className="mb-10">
-            <div
-              className="mb-10"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setActiveNote("doc1");
-              }}
-            >
-              <Editor
-                mode={activeNote === "doc1" ? "edit" : "view"}
-                fragment={doc.getXmlFragment("doc1")}
-                provider={provider}
-                user={user}
-              />
-            </div>
-
-            <hr></hr>
-
-            <div
-              className="mb-10"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setActiveNote("doc2");
-              }}
-            >
-              <Editor
-                mode={activeNote === "doc2" ? "edit" : "view"}
-                fragment={doc.getXmlFragment("doc2")}
-                provider={provider}
-                user={user}
-              />
-            </div>
-
-            <hr></hr>
-
-            <div
-              className="mb-10"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                setActiveNote("doc3");
-              }}
-            >
-              <Editor
-                mode={activeNote === "doc3" ? "edit" : "view"}
-                fragment={doc.getXmlFragment("doc3")}
-                provider={provider}
-                user={user}
-              />
-            </div>
-          </div>
+          <div className="mb-10">{editorComponents}</div>
 
           <div className="mb-10">
             <div>
